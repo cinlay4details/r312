@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   bordered_text: ^2.0.0
+  cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
   flutter_blue_classic: ^0.0.4
