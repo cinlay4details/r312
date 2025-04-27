@@ -1,0 +1,32 @@
+name: r312
+description: "Remote control for the u312"
+publish_to: 'none' # never publish
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  bordered_text: ^2.0.0
+  flutter:
+    sdk: flutter
+  flutter_blue_classic: ^0.0.4
+  flutter_libserialport: ^0.5.0
+  flutter_svg: ^2.1.0
+  google_fonts: ^6.2.1
+  hold_down_button: ^1.1.0
+  material_symbols_icons: ^4.2815.0
+  mqtt_client: ^10.8.0
+  serial: ^0.0.7+1
+  web: ^1.1.1
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^7.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
