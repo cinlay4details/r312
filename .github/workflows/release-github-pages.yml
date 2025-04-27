@@ -30,7 +30,7 @@ jobs:
         run: flutter pub get
 
       - name: Build for web
-        run: flutter build web
+        run: flutter build web --base-href="/r312/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
