@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:developer' as developer;
 import 'dart:typed_data';
 
@@ -8,39 +7,72 @@ import 'package:r312/api/u312_box_serial.dart';
 
 enum Channel { a, b }
 
+class U312State {
+  Mode mode = Mode.wave;
+  int channelA = 0;
+  int channelB = 0;
+  double maLevel = 0;
+}
+
 class U312BoxApi {
   U312BoxApi(this._address) {
     box = U312BoxSerial();
   }
   final String _address;
   late final U312BoxSerial box;
-  late final Queue<Future<void> Function()> _commands = Queue();
-  late Future<void> _processCommandHandle;
-  bool _isClosing = false;
-  
 
-  Future<void> _processCommands() async {
-    while (_commands.isNotEmpty) {
-      if (_isClosing) {
-        break;
+  final U312State _remoteState = U312State();
+  final U312State _targetState = U312State();
+
+  Future<void>? _applyStateHandle;
+  bool _isApplying = false;
+  bool _isClosing = false;
+
+  Future<void> _applyState() async {
+    _isApplying = true;
+    var appliedChanges = true;
+    while (!_isClosing && appliedChanges) {
+      appliedChanges = false;
+      if (_remoteState.mode != _targetState.mode) {
+        final mode = _targetState.mode;
+        await _switchToMode(mode);
+        _remoteState.mode = mode;
+        appliedChanges = true;
       }
-      final command = _commands.removeFirst();
-      if (_commands.isEmpty) {
-        _commands.add(idle);
+      if (_remoteState.channelA != _targetState.channelA) {
+        final channelA = _targetState.channelA;
+        await _setChannelLevel(Channel.a, channelA);
+        _remoteState.channelA = channelA;
+        appliedChanges = true;
       }
-      try {
-        await command();
-      } on Exception catch (e) {
-        developer.log('Error processing command: $e');
+      if (_remoteState.channelB != _targetState.channelB) {
+        final channelB = _targetState.channelB;
+        await _setChannelLevel(Channel.b, channelB);
+        _remoteState.channelB = channelB;
+        appliedChanges = true;
+      }
+      if (_remoteState.maLevel != _targetState.maLevel) {
+        final maLevel = _targetState.maLevel;
+        await _setMALevel(maLevel);
+        _remoteState.maLevel = maLevel;
+        appliedChanges = true;
       }
     }
-    developer.log('All commands processed');
+    _isApplying = false;
+    return;
+  }
+
+  void _requestUpdateState() {
+    if (_isApplying) {
+      return;
+    }
+    _applyStateHandle = _applyState();
   }
 
   Future<void> connect() async {
     await box.open(_address);
-    _commands.add(_init);
-    _processCommandHandle = _processCommands();
+    await _init();
+    _applyStateHandle = _applyState();
   }
 
   Future<void> _disableBoxButtons() async {
@@ -64,27 +96,28 @@ class U312BoxApi {
   }
 
   Future<void> setChannelLevel(Channel channel, int level) async {
-    _commands.add(() => _setChannelLevel(channel, level));
+    final safeLevel = level.clamp(0, 255);
+    if (channel == Channel.a) {
+      _targetState.channelA = safeLevel;
+    } else {
+      _targetState.channelB = safeLevel;
+    }
+    _requestUpdateState();
   }
+
   Future<void> _setChannelLevel(Channel channel, int level) async {
-    final clampedLevel = level.clamp(0, 255);
-    final address = channel == Channel.a
-        ? 0x4064
-        : 0x4065;
-    await box.poke(address, Uint8List.fromList([clampedLevel]));
-    developer.log(
-      'Channel ${channel.name.toUpperCase()} Level: $clampedLevel',
-    );
+    final address = channel == Channel.a ? 0x4064 : 0x4065;
+    await box.poke(address, Uint8List.fromList([level]));
+    developer.log('Channel ${channel.name.toUpperCase()} Level: $level');
   }
 
   Future<void> setMALevel(double level) async {
-    _commands.add(() => _setMALevel(level));
+    final safeLevel = level.clamp(0.0, 1.0);
+    _targetState.maLevel = safeLevel;
+    _requestUpdateState();
   }
 
   Future<void> _setMALevel(double level) async {
-    if (level < 0 || level > 1) {
-      throw Exception('Level must be between 0 and 1');
-    }
     final lowerBound = await box.peek(0x4086);
     final upperBound = await box.peek(0x4087);
     final range = upperBound - lowerBound;
@@ -97,7 +130,8 @@ class U312BoxApi {
   }
 
   Future<void> switchToMode(Mode mode) async {
-    _commands.add(() => _switchToMode(mode));
+    _targetState.mode = mode;
+    _requestUpdateState();
   }
 
   Future<void> _switchToMode(Mode mode) async {
@@ -113,7 +147,7 @@ class U312BoxApi {
 
   Future<void> close() async {
     _isClosing = true;
-    await _processCommandHandle;
+    await _applyStateHandle;
     await box.close();
   }
 }
