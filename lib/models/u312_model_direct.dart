@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:r312/api/modes.dart';
 import 'package:r312/api/u312_box_api.dart';
 import 'package:r312/models/u312_model_stub.dart';
-// import 'package:r312/utils/throttle.dart';
 
 class U312ModelDirect extends U312ModelStub {
   U312ModelDirect(String address) {
-    // _u312BoxSerial = U312BoxSerial();
     _box = U312BoxApi(address);
   }
   late U312BoxApi _box;
@@ -15,6 +13,7 @@ class U312ModelDirect extends U312ModelStub {
   @override
   Future<void> connect() async {
     await _box.connect();
+    await init();
   }
 
   @override

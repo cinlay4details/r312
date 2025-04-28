@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:r312/api/modes.dart';
 
-class U312ModelStub extends ChangeNotifier {
+abstract class U312ModelStub extends ChangeNotifier {
   // public constants
   double get battery => 0;
   double get power => 1;
@@ -92,7 +92,13 @@ class U312ModelStub extends ChangeNotifier {
     notifyListeners();
   }
 
-  void connect() {
-    _applyChannelOrModeUpdate();
+  void connect() {}
+
+  Future<void> init() async {
+    mode = Mode.wave;
+    chADial = 0;
+    chBDial = 0;
+    aAndBDial = 0;
+    multiAdjustDial = 0;
   }
 }
