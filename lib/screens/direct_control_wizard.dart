@@ -10,9 +10,7 @@ import 'package:r312/screens/widgets/serial_selector_wizard_page.dart';
 import 'package:r312/screens/widgets/serial_unavailable_wizard_page.dart';
 
 class DirectControlWizard extends StatefulWidget {
-  const DirectControlWizard({
-    super.key,
-  });
+  const DirectControlWizard({super.key});
 
   @override
   State<DirectControlWizard> createState() => _DirectControlWizardState();
@@ -57,9 +55,14 @@ class _DirectControlWizardState extends State<DirectControlWizard> {
                 try {
                   final model = U312ModelDirect(_selectedDeviceAddress!);
                   await model.connect();
-                  Navigator.pushReplacement(context, MaterialPageRoute(
-                    builder: (context) => BoxTwinWidget(appState: model),
-                  ),);
+                  if (mounted) {
+                    await Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute<BoxTwinWidget>(
+                        builder: (context) => BoxTwinWidget(appState: model),
+                      ),
+                    );
+                  }
                   // ignore: avoid_catches_without_on_clauses show all errors
                 } catch (e) {
                   // Handle connection failure

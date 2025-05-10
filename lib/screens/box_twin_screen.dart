@@ -98,7 +98,9 @@ class BoxTwinWidget extends StatelessWidget {
                             rightPressed: appState.pressRight,
                             disconnectPressed: () async {
                               await appState.pressDisconnect();
-                              Navigator.pop(context);
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                              }
                             },
                           ),
                           BoxDialWidget(

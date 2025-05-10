@@ -69,12 +69,17 @@ class _BridgeWizardState extends State<BridgeWizard> {
                   );
                   await model.connect();
                   // Handle successful connection
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BoxTwinWidget(appState: model),
-                    ),
-                  );
+                  if (mounted) {
+                    // Explicitly check if the widget is still mounted
+                    await Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute<BoxTwinWidget>(
+                        builder: (context) => BoxTwinWidget(appState: model),
+                      ),
+                    );
+                  }
+
+                  // ignore: avoid_catches_without_on_clauses allow all failures
                 } catch (e) {
                   // Handle connection failure
                   developer.log('Failed to connect: $e');

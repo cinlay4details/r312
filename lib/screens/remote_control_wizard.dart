@@ -7,9 +7,7 @@ import 'package:r312/screens/widgets/connecting_wizard_page.dart';
 import 'package:r312/screens/widgets/mqtt_broker_wizard_page.dart';
 
 class RemoteControlWizard extends StatefulWidget {
-  const RemoteControlWizard({
-    super.key,
-  });
+  const RemoteControlWizard({super.key});
 
   @override
   State<RemoteControlWizard> createState() => _RemoteControlWizardState();
@@ -35,9 +33,14 @@ class _RemoteControlWizardState extends State<RemoteControlWizard> {
           try {
             final model = U312ModelRemote(address);
             await model.connect();
-            Navigator.pushReplacement(context, MaterialPageRoute(
-              builder: (context) => BoxTwinWidget(appState: model),
-            ),);
+            if (mounted) {
+              await Navigator.pushReplacement(
+                context,
+                MaterialPageRoute<BoxTwinWidget>(
+                  builder: (context) => BoxTwinWidget(appState: model),
+                ),
+              );
+            }
             // ignore: avoid_catches_without_on_clauses show all errors
           } catch (e) {
             // Handle connection failure
