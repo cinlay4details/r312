@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:r312/models/u312_model_stub.dart';
+import 'package:r312/screens/box_twin_screen.dart';
 import 'package:r312/screens/bridge_wizard.dart';
 import 'package:r312/screens/direct_control_wizard.dart';
 import 'package:r312/screens/remote_control_wizard.dart';
@@ -15,6 +17,19 @@ class BoxPicker extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            _buildOption(
+              context,
+              icon: Icons.bug_report,
+              label: 'Test Stub',
+              onTap: () {
+                final model = U312ModelStub();
+                addPage({
+                  'title': 'Test Stub',
+                  'icon': Icons.bug_report,
+                  'widget': BoxTwinWidget(appState: model),
+                });
+              },
+            ),
             _buildOption(
               context,
               icon: Icons.settings_remote,

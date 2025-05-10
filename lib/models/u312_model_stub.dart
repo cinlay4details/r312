@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:r312/api/modes.dart';
 
-abstract class U312ModelStub extends ChangeNotifier {
+class U312ModelStub extends ChangeNotifier {
   // public constants
   double get battery => 0;
   double get power => 1;
@@ -93,6 +93,11 @@ abstract class U312ModelStub extends ChangeNotifier {
   }
 
   void connect() {}
+
+  void disconnect() {
+    _screenText[1] = 'Disconnected.';
+    notifyListeners();
+  }
 
   Future<void> init() async {
     mode = Mode.wave;

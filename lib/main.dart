@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:r312/models/u312_model_stub.dart';
 import 'package:r312/screens/box_picker.dart';
+import 'package:r312/screens/box_twin_screen.dart';
 
 const bool DEBUG = false; // Set this to false to hide the navigation
 
@@ -42,6 +44,11 @@ class _R312ScaffoldState extends State<R312Scaffold> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late final List<Map<String, dynamic>> _pages = [
+    {
+      'title': 'Test Stub',
+      'icon': Icons.bug_report,
+      'widget': BoxTwinWidget(appState: U312ModelStub()),
+    },
     {
       'title': 'Box Picker',
       'icon': Icons.add_box,
