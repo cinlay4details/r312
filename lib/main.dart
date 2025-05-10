@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:r312/screens/box_picker.dart';
 
+const bool DEBUG = false; // Set this to false to hide the navigation
+
 void main() {
   runApp(const MyApp());
 }
@@ -60,36 +62,37 @@ class _R312ScaffoldState extends State<R312Scaffold> {
       key: _scaffoldKey,
       body: Row(
         children: [
-          SizedBox(
-            width: 50, // Set width for NavigationRail
-            child: NavigationRail(
-              leading: Column(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.menu),
-                    onPressed: () {
-                      _scaffoldKey.currentState
-                          ?.openDrawer(); // Open the left drawer
-                    },
+          if (DEBUG) // Show navigation only if DEBUG is true
+            SizedBox(
+              width: 50, // Set width for NavigationRail
+              child: NavigationRail(
+                leading: Column(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.menu),
+                      onPressed: () {
+                        _scaffoldKey.currentState
+                            ?.openDrawer(); // Open the left drawer
+                      },
+                    ),
+                  ],
+                ),
+                selectedIndex: _selectedIndex,
+                onDestinationSelected: (int index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
+                destinations: List.generate(
+                  _pages.length,
+                  (index) => NavigationRailDestination(
+                    icon: Icon(_pages[index]['icon'] as IconData?),
+                    selectedIcon: Icon(_pages[index]['icon'] as IconData),
+                    label: Text(_pages[index]['title'] as String),
                   ),
-                ],
-              ),
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: (int index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              destinations: List.generate(
-                _pages.length,
-                (index) => NavigationRailDestination(
-                  icon: Icon(_pages[index]['icon'] as IconData?),
-                  selectedIcon: Icon(_pages[index]['icon'] as IconData),
-                  label: Text(_pages[index]['title'] as String),
                 ),
               ),
             ),
-          ),
           Expanded(
             child: Navigator(
               onGenerateRoute: (settings) {
