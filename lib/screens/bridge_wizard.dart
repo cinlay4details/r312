@@ -11,10 +11,7 @@ import 'package:r312/screens/widgets/serial_selector_wizard_page.dart';
 import 'package:r312/screens/widgets/serial_unavailable_wizard_page.dart';
 
 class BridgeWizard extends StatefulWidget {
-  const BridgeWizard({required this.onClose, required this.addPage, super.key});
-
-  final VoidCallback onClose;
-  final void Function(Map<String, dynamic>) addPage;
+  const BridgeWizard({super.key});
 
   @override
   State<BridgeWizard> createState() => _BridgeWizardState();
@@ -72,13 +69,12 @@ class _BridgeWizardState extends State<BridgeWizard> {
                   );
                   await model.connect();
                   // Handle successful connection
-                  widget.addPage({
-                    'title': 'Bridge',
-                    'icon': Icons.link,
-                    'widget': BoxTwinWidget(appState: model),
-                  });
-                  widget.onClose(); // Close the wizard
-                  // ignore: avoid_catches_without_on_clauses show all errors
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BoxTwinWidget(appState: model),
+                    ),
+                  );
                 } catch (e) {
                   // Handle connection failure
                   developer.log('Failed to connect: $e');
@@ -104,7 +100,9 @@ class _BridgeWizardState extends State<BridgeWizard> {
         title: const Text('Direct Control Wizard'),
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: widget.onClose,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body:

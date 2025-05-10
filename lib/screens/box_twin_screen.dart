@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:r312/models/u312_model_stub.dart';
-import 'package:r312/screens/widgets/box_button_widget.dart';
 import 'package:r312/screens/widgets/box_controls_widget.dart';
 import 'package:r312/screens/widgets/box_dial_widget.dart';
 import 'package:r312/screens/widgets/box_light_widget.dart';
 import 'package:r312/screens/widgets/box_screen_widget.dart';
 
 class BoxTwinWidget extends StatelessWidget {
-  const BoxTwinWidget({required this.appState, super.key});
+  const BoxTwinWidget({
+    required this.appState,
+    super.key,
+  });
 
   final U312ModelStub appState;
 
@@ -68,33 +70,16 @@ class BoxTwinWidget extends StatelessWidget {
                           ),
                         ],
                       ),
-                      // const SizedBox(height: 16), // Spacing between rows
+                      const SizedBox(height: 16), // Spacing between rows
                       Row(
                         children: [
-                          Expanded(
-                            child: Stack(
-                              alignment:
-                                  Alignment.center, // Center the stack contents
-                              children: [
-                                Align(
-                                  alignment:
-                                      Alignment
-                                          .centerLeft, // Align the light to the left
-                                  child: BoxLightWidget(
-                                    icon: Symbols.power_settings_new,
-                                    brightness: appState.power,
-                                  ),
-                                ),
-                                BoxButtonWidget(
-                                  onPressed: appState.disconnect,
-                                  icon: Icons.link_off,
-                                ), // Centered button
-                              ],
-                            ),
+                          BoxLightWidget(
+                            icon: Symbols.power_settings_new,
+                            brightness: appState.power,
                           ),
                         ],
                       ),
-                      // const SizedBox(height: 16), // Spacing between rows
+                      const SizedBox(height: 16), // Spacing between rows
                       Row(
                         children: [
                           BoxLightWidget(
@@ -109,10 +94,12 @@ class BoxTwinWidget extends StatelessWidget {
                             },
                           ),
                           BoxControlsWidget(
-                            menuPressed: () => {},
                             leftPressed: appState.pressLeft,
                             rightPressed: appState.pressRight,
-                            okPressed: () => {},
+                            disconnectPressed: () async {
+                              await appState.pressDisconnect();
+                              Navigator.pop(context);
+                            },
                           ),
                           BoxDialWidget(
                             value: appState.chBDial,

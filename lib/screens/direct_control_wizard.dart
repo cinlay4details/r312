@@ -11,13 +11,8 @@ import 'package:r312/screens/widgets/serial_unavailable_wizard_page.dart';
 
 class DirectControlWizard extends StatefulWidget {
   const DirectControlWizard({
-    required this.onClose,
-    required this.addPage,
     super.key,
   });
-
-  final VoidCallback onClose;
-  final void Function(Map<String, dynamic>) addPage;
 
   @override
   State<DirectControlWizard> createState() => _DirectControlWizardState();
@@ -62,13 +57,9 @@ class _DirectControlWizardState extends State<DirectControlWizard> {
                 try {
                   final model = U312ModelDirect(_selectedDeviceAddress!);
                   await model.connect();
-                  // Handle successful connection
-                  widget.addPage({
-                    'title': 'Direct Control',
-                    'icon': Icons.settings_remote,
-                    'widget': BoxTwinWidget(appState: model),
-                  });
-                  widget.onClose(); // Close the wizard
+                  Navigator.pushReplacement(context, MaterialPageRoute(
+                    builder: (context) => BoxTwinWidget(appState: model),
+                  ),);
                   // ignore: avoid_catches_without_on_clauses show all errors
                 } catch (e) {
                   // Handle connection failure
@@ -95,7 +86,9 @@ class _DirectControlWizardState extends State<DirectControlWizard> {
         title: const Text('Direct Control Wizard'),
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: widget.onClose,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body:

@@ -4,17 +4,15 @@ import 'package:r312/screens/widgets/box_button_widget.dart';
 
 class BoxControlsWidget extends StatelessWidget {
   const BoxControlsWidget({
-    required this.menuPressed,
+    required this.disconnectPressed,
     required this.leftPressed,
     required this.rightPressed,
-    required this.okPressed,
     super.key,
   });
 
-  final VoidCallback menuPressed;
+  final VoidCallback disconnectPressed;
   final VoidCallback leftPressed;
   final VoidCallback rightPressed;
-  final VoidCallback okPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +22,15 @@ class BoxControlsWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              BoxButtonWidget(text: 'Menu', onPressed: menuPressed),
               BoxButtonWidget(icon: Icons.chevron_left, onPressed: leftPressed),
+              BoxButtonWidget(
+                icon: Icons.link_off,
+                onPressed: disconnectPressed,
+              ),
               BoxButtonWidget(
                 icon: Icons.chevron_right,
                 onPressed: rightPressed,
               ),
-              BoxButtonWidget(text: 'OK', onPressed: okPressed),
             ],
           ),
           const SizedBox(height: 10), // Spacing between rows

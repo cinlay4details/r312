@@ -8,13 +8,8 @@ import 'package:r312/screens/widgets/mqtt_broker_wizard_page.dart';
 
 class RemoteControlWizard extends StatefulWidget {
   const RemoteControlWizard({
-    required this.onClose,
-    required this.addPage,
     super.key,
   });
-
-  final VoidCallback onClose;
-  final void Function(Map<String, dynamic>) addPage;
 
   @override
   State<RemoteControlWizard> createState() => _RemoteControlWizardState();
@@ -40,13 +35,9 @@ class _RemoteControlWizardState extends State<RemoteControlWizard> {
           try {
             final model = U312ModelRemote(address);
             await model.connect();
-            // Handle successful connection
-            widget.addPage({
-              'title': 'Remote Control',
-              'icon': Icons.wifi,
-              'widget': BoxTwinWidget(appState: model),
-            });
-            widget.onClose(); // Close the wizard
+            Navigator.pushReplacement(context, MaterialPageRoute(
+              builder: (context) => BoxTwinWidget(appState: model),
+            ),);
             // ignore: avoid_catches_without_on_clauses show all errors
           } catch (e) {
             // Handle connection failure
@@ -66,7 +57,9 @@ class _RemoteControlWizardState extends State<RemoteControlWizard> {
         title: const Text('Remote Control Wizard'),
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: widget.onClose,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: _pages[_currentPage],

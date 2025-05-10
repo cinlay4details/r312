@@ -6,8 +6,7 @@ import 'package:r312/screens/direct_control_wizard.dart';
 import 'package:r312/screens/remote_control_wizard.dart';
 
 class BoxPicker extends StatelessWidget {
-  const BoxPicker({required this.addPage, super.key});
-  final void Function(Map<String, dynamic>) addPage;
+  const BoxPicker({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +22,12 @@ class BoxPicker extends StatelessWidget {
               label: 'Test Stub',
               onTap: () {
                 final model = U312ModelStub();
-                addPage({
-                  'title': 'Test Stub',
-                  'icon': Icons.bug_report,
-                  'widget': BoxTwinWidget(appState: model),
-                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => BoxTwinWidget(appState: model),
+                  ),
+                );
               },
             ),
             _buildOption(
@@ -38,12 +38,7 @@ class BoxPicker extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (context) => DirectControlWizard(
-                      onClose: () {
-                        Navigator.pop(context);
-                      },
-                      addPage: addPage, // Pass addPage to the wizard
-                    ),
+                    builder: (context) => const DirectControlWizard(),
                   ),
                 );
               },
@@ -56,11 +51,7 @@ class BoxPicker extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (context) => BridgeWizard(
-                      onClose: () {
-                        Navigator.pop(context);
-                      },
-                      addPage: addPage, // Pass addPage to the wizard
+                    builder: (context) => const BridgeWizard(
                     ),
                   ),
                 );
@@ -74,11 +65,7 @@ class BoxPicker extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (context) => RemoteControlWizard(
-                      onClose: () {
-                        Navigator.pop(context);
-                      },
-                      addPage: addPage, // Pass addPage to the wizard
+                    builder: (context) => const RemoteControlWizard(
                     ),
                   ),
                 );

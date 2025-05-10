@@ -94,9 +94,10 @@ class U312ModelStub extends ChangeNotifier {
 
   void connect() {}
 
-  void disconnect() {
-    _screenText[1] = 'Disconnected.';
-    notifyListeners();
+  void disconnect() {}
+
+  Future<void> pressDisconnect() async {
+    disconnect();
   }
 
   Future<void> init() async {
