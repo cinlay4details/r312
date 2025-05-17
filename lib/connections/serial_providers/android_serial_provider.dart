@@ -56,7 +56,9 @@ class RS323Provider implements RS232ProviderInterface {
   }
 
   @override
-  Future<Uint8List> read(int length) async {
+  Future<Uint8List?> read(int length, {
+    Duration timeout = const Duration(milliseconds: 1000),
+  }) async {
     while (_buffer.length < length) {
       await Future<void>.delayed(const Duration(milliseconds: 100));
     }

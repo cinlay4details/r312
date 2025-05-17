@@ -58,8 +58,10 @@ class RS232Provider implements RS232ProviderInterface {
   }
 
   @override
-  Future<Uint8List> read(int length) async {
-    final response = port.read(length, timeout: 100);
+  Future<Uint8List?> read(int length, {
+    Duration timeout = const Duration(milliseconds: 1000),
+  }) async {
+    final response = port.read(length, timeout: timeout.inMicroseconds);
     return Future.value(Uint8List.fromList(response));
   }
 

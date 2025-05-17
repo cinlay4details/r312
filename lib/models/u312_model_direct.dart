@@ -17,6 +17,11 @@ class U312ModelDirect extends U312ModelStub {
   }
 
   @override
+  Future<void> disconnect() async {
+    await _box.close();
+  }
+
+  @override
   set mode(Mode value) {
     super.mode = value;
     _box.switchToMode(super.mode);

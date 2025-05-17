@@ -47,8 +47,10 @@ class RS232Provider implements RS232ProviderInterface {
   }
 
   @override
-  Future<Uint8List> read(int length) {
-    return _implementation.read(length);
+  Future<Uint8List?> read(int length, {
+    Duration timeout = const Duration(milliseconds: 1000),
+  }) async {
+    return _implementation.read(length, timeout: timeout);
   }
 
   @override

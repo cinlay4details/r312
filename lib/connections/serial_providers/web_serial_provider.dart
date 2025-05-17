@@ -12,26 +12,18 @@ class RS232Provider implements RS232ProviderInterface {
   late ReadableStreamDefaultReader reader;
 
   @override
-  Future<
-    ({
-      List<({String address, String name})> devices,
-      bool supported,
-    })
-  >
+  Future<({List<({String address, String name})> devices, bool supported})>
   getSerialOptions() async {
     var supported = false;
     try {
       supported = window.navigator.serial != null;
-    // ignore: avoid_catches_without_on_clauses any error means it is not supported
+      // ignore: avoid_catches_without_on_clauses any error means it is not supported
     } catch (e) {
       developer.log('Serial API not supported: $e');
     }
     // window.navigator.serial;
     return (
-      devices: [(
-        address: '!',
-        name: 'Click to open the serial port selector',
-      ),],
+      devices: [(address: '!', name: 'Click to open the serial port selector')],
       supported: supported,
     );
   }
@@ -51,19 +43,43 @@ class RS232Provider implements RS232ProviderInterface {
     return port.close().toDart;
   }
 
+  Future<ReadableStreamReadResult?>? _chunkWait;
+
+  int _readId = 0;
+
   @override
-  Future<Uint8List> read(int length) async {
-    final buffer = <int>[];
-    while (buffer.length < length) {
-      final chunk = await reader.read().toDart;
+  Future<Uint8List?> read(
+    int length, {
+    Duration timeout = const Duration(milliseconds: 1000),
+  }) async {
+    final readId = _readId++;
+    developer.log('Reading $length bytes (id: $readId)');
+    final buffer = Uint8List(length);
+    var offset = 0;
+    while (offset < length) {
+      // the stream is a singleton, so waiting needs to be a singleton too
+      _chunkWait ??= reader.read().toDart;
+      final chunk = await Future.any([
+        _chunkWait!,
+        Future.delayed(timeout, () {
+          return null;
+        }),
+      ]);
+      if (chunk == null) {
+        return null;
+      }
+
+      _chunkWait = null;
       final data = chunk.value;
       if (data == null || !data.isA<JSUint8Array>()) {
-        await Future<void>.delayed(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 10));
         continue;
       }
-      buffer.addAll((data as JSUint8Array).toDart);
+      final array = (data as JSUint8Array).toDart;
+      buffer.setAll(offset, array);
+      offset += array.length;
     }
-    return Uint8List.fromList(buffer);
+    return buffer;
   }
 
   @override

@@ -39,17 +39,19 @@ class U312BoxSerial {
   }) async {
     // read from the box with timeout
     final response = await rs232Provider
-        .read(length + (checksum ? 1 : 0))
-        .timeout(
-          Duration(milliseconds: timeout),
-          onTimeout: () {
-            return Uint8List(0); // Return an empty Uint8List on timeout
-          },
-        );
-
-    if (response.isEmpty) {
+        .read(
+          length + (checksum ? 1 : 0),
+          timeout: Duration(milliseconds: timeout),
+        )
+        .catchError((Object e) {
+          developer.log('Read error: $e');
+          return null; // Return null on error
+        });
+    if (response == null || response.length < length) {
+      developer.log('Read error: response is null or too short');
       return null; // Return null if the response is empty
     }
+
     if (checksum) {
       // check checksum
       var expected = 0;
@@ -80,6 +82,12 @@ class U312BoxSerial {
   }
 
   Future<void> _sync() async {
+    // flush connection
+    Uint8List? flush;
+    do {
+      flush = await _read(1, timeout: 100, checksum: false);
+      developer.log('Flushing: $flush');
+    } while (flush != null);
     // sync the connection
     for (var i = 0; i < 11; i++) {
       final response = await _writeThenRead(
@@ -91,6 +99,7 @@ class U312BoxSerial {
       developer.log('Sync response: $response');
       if (response != null) {
         if (response[0] == 0x07) {
+          developer.log('Sync successful');
           return; // sync successful
         }
       }
@@ -125,11 +134,18 @@ class U312BoxSerial {
     try {
       await _sync();
       await _keyExchange();
+      return;
     } on Exception catch (e) {
       developer.log('Sync failed: $e');
+    }
+    developer.log('Assuming re-establishing connection');
+    try {
       deviceKey = 0x00;
       await _sync();
       await _keyExchange();
+      return;
+    } on Exception catch (e) {
+      developer.log('Re-establishing connection failed: $e');
       throw Exception('Unable to connect to the box');
     }
   }

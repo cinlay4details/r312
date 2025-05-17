@@ -14,7 +14,8 @@ class RS232Provider implements RS232ProviderInterface {
   }
 
   @override
-  Future<Uint8List> read(int length) {
+  Future<Uint8List?> read(int length, {
+    Duration timeout = const Duration(milliseconds: 1000),}) {
     throw UnimplementedError('read() has not been implemented.');
   }
 
