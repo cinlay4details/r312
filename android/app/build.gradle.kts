@@ -9,7 +9,7 @@ android {
     namespace = "com.example.r312"
     compileSdk = flutter.compileSdkVersion
     // ndkVersion = flutter.ndkVersion
-    ndkVersion = "27.0.12077973" # manually bump ndk to support flutter_libserialport
+    ndkVersion = "27.0.12077973" // manually bump ndk to support flutter_libserialport
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
