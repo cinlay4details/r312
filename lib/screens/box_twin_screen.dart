@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:r312/models/u312_model_stub.dart';
+import 'package:r312/models/u312_model.dart';
 import 'package:r312/screens/widgets/box_controls_widget.dart';
 import 'package:r312/screens/widgets/box_dial_widget.dart';
 import 'package:r312/screens/widgets/box_light_widget.dart';
@@ -12,7 +12,7 @@ class BoxTwinWidget extends StatelessWidget {
     super.key,
   });
 
-  final U312ModelStub appState;
+  final U312Model appState;
 
   @override
   Widget build(BuildContext context) {

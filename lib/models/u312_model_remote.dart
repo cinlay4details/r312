@@ -3,10 +3,10 @@ import 'dart:developer' as developer;
 import 'package:r312/api/modes.dart';
 import 'package:r312/connections/mqtt_providers/mqtt_provider.dart';
 import 'package:r312/connections/mqtt_providers/platform_mqtt_provider.dart';
-import 'package:r312/models/u312_model_stub.dart';
+import 'package:r312/models/u312_model.dart';
 import 'package:r312/utils/throttle.dart';
 
-class U312ModelRemote extends U312ModelStub {
+class U312ModelRemote extends U312Model {
   U312ModelRemote(String address) {
     _address = address;
     _mqttProvider = MqttProvider(onMessage: _onMqttMessage);
@@ -37,8 +37,13 @@ class U312ModelRemote extends U312ModelStub {
 
   @override
   Future<void> connect() async {
-    super.connect();
     await _mqttProvider.connect(_address);
+    await init('Remote');
+  }
+
+  @override
+  Future<void> disconnect() async {
+    _mqttProvider.disconnect();
   }
 
   @override

@@ -4,6 +4,9 @@ abstract interface class MqttProviderInterface {
   }) = _MqttProviderInterfaceImpl;
 
   Future<bool> connect(String address);
+
+  void disconnect();
+
   void publish(String message);
 }
 
@@ -17,6 +20,11 @@ class _MqttProviderInterfaceImpl implements MqttProviderInterface {
   Future<bool> connect(String address) async {
     // Implement connect logic
     return true;
+  }
+
+  @override
+  void disconnect() {
+    // Implement disconnect logic
   }
 
   @override

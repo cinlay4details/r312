@@ -1,28 +1,32 @@
 import 'package:flutter/widgets.dart';
 import 'package:r312/api/modes.dart';
 
-abstract class U312ModelStub extends ChangeNotifier {
+abstract class U312Model extends ChangeNotifier {
   // public constants
   double get battery => 0;
   double get power => 1;
   double get volume => 1;
 
   // public read state only
-  final _screenText = ['      ^__^      ', 'Connecting...   '];
+  final _screenText = ['      ^__^      ',
+                       '      r312      ',];
   List<String> get screenText => _screenText;
 
-  double _chA = 0;
+  double _chA = 0; // chA light
   double get chA => _chA;
 
-  double _chB = 0;
+  double _chB = 0; // chB light
   double get chB => _chB;
 
+  // private state
+  String _connectionType = '^__^';
+
   String _getDialReadingAsDisplay(double normalized) {
-    final scaled = (normalized * 99).round();
+    final scaled = (normalized * 99).floor();
     return scaled.toString().padLeft(2, '0');
   }
 
-  void _applyChannelOrModeUpdate() {
+  void _applyUpdates() {
     final aLevel = (_aAndBDial * _chADial) / (255 * 255);
     final bLevel = (_aAndBDial * _chBDial) / (255 * 255);
     _chA = aLevel;
@@ -32,20 +36,26 @@ abstract class U312ModelStub extends ChangeNotifier {
       'B${_getDialReadingAsDisplay(bLevel)}',
       ' ${_mode.name}',
      ].join(' ');
-     _screenText[1] = 'Connected.';
+    final maLevel = _multiAdjustDial / 255;
+    _screenText[1] = [
+      'MA   ${_getDialReadingAsDisplay(maLevel)}',
+      ' $_connectionType',
+    ].join(' ');
     notifyListeners();
   }
 
   // controllers
 
-  final Mode _mode = Mode.wave;
+  Mode _mode = Mode.wave;
   Mode get mode => _mode;
-  set mode(Mode value);
+  set mode(Mode value) {
+    _mode = value;
+    _applyUpdates();
+  }
 
   void pressRight() {
     final nextIndex = (_mode.index + 1) % Mode.values.length;
     mode = Mode.values[nextIndex];
-    _applyChannelOrModeUpdate();
   }
 
   void pressLeft() {
@@ -54,7 +64,6 @@ abstract class U312ModelStub extends ChangeNotifier {
       previousIndex = Mode.values.length - 1;
     }
     mode = Mode.values[previousIndex];
-    _applyChannelOrModeUpdate();
   }
 
   int _aAndBDial = 0;
@@ -62,7 +71,7 @@ abstract class U312ModelStub extends ChangeNotifier {
   set aAndBDial(int value) {
     final clamped = value.clamp(0, 255);
     _aAndBDial = clamped;
-    _applyChannelOrModeUpdate();
+    _applyUpdates();
   }
 
   int _chADial = 0;
@@ -70,7 +79,7 @@ abstract class U312ModelStub extends ChangeNotifier {
   set chADial(int value) {
     final clamped = value.clamp(0, 255);
     _chADial = clamped;
-    _applyChannelOrModeUpdate();
+    _applyUpdates();
   }
 
   int _chBDial = 0;
@@ -78,7 +87,7 @@ abstract class U312ModelStub extends ChangeNotifier {
   set chBDial(int value) {
     final clamped = value.clamp(0, 255);
     _chBDial = clamped;
-    _applyChannelOrModeUpdate();
+    _applyUpdates();
   }
 
   int _multiAdjustDial = 0;
@@ -86,10 +95,23 @@ abstract class U312ModelStub extends ChangeNotifier {
   set multiAdjustDial(int value) {
     final clamped = value.clamp(0, 255);
     _multiAdjustDial = clamped;
-    notifyListeners();
+    _applyUpdates();
   }
 
-  void connect() {
-    _applyChannelOrModeUpdate();
+  void connect();
+
+  void disconnect();
+
+  Future<void> pressDisconnect() async {
+    disconnect();
+  }
+
+  Future<void> init(String connectionType) async {
+    _connectionType = connectionType;
+    mode = Mode.wave;
+    chADial = 0;
+    chBDial = 0;
+    aAndBDial = 0;
+    multiAdjustDial = 0;
   }
 }

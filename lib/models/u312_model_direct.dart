@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:r312/api/modes.dart';
 import 'package:r312/api/u312_box_api.dart';
-import 'package:r312/models/u312_model_stub.dart';
+import 'package:r312/models/u312_model.dart';
 
-class U312ModelDirect extends U312ModelStub {
+class U312ModelDirect extends U312Model {
   U312ModelDirect(String address) {
     _box = U312BoxApi(address);
   }
@@ -13,7 +13,7 @@ class U312ModelDirect extends U312ModelStub {
   @override
   Future<void> connect() async {
     await _box.connect();
-    await init();
+    await init('Direct');
   }
 
   @override
@@ -65,9 +65,4 @@ class U312ModelDirect extends U312ModelStub {
     _updateMALevel();
   }
 
-  @override
-  void dispose() {
-    _box.close();
-    super.dispose();
-  }
 }

@@ -63,6 +63,16 @@ class MqttProvider implements MqttProviderInterface {
   }
 
   @override
+  void disconnect() {
+    if (!isConnected) {
+      developer.log('mqtt disconnect called but not connected');
+      return;
+    }
+    developer.log('mqtt disconnecting...');
+    _client.disconnect();
+  }
+
+  @override
   void publish(String message) {
     final builder = MqttClientPayloadBuilder()
     ..addString(message);

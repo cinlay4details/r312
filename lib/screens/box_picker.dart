@@ -21,7 +21,8 @@ class BoxPicker extends StatelessWidget {
               icon: Icons.bug_report,
               label: 'Test Stub',
               onTap: () {
-                final model = U312ModelStub();
+                final model = U312ModelStub()
+                ..connect();
                 Navigator.push(
                   context,
                   MaterialPageRoute<void>(

@@ -10,6 +10,11 @@ class MqttProvider implements MqttProviderInterface {
   }
 
   @override
+  void disconnect() {
+    throw Exception('StubMqttProvider does not support disconnect');
+  }
+
+  @override
   void publish(String message) {
     throw Exception('StubMqttProvider does not support publish');
   }
