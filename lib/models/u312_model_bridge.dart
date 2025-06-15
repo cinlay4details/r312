@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer' as developer;
 
 import 'package:r312/api/modes.dart';
@@ -15,7 +16,7 @@ class U312ModelBridge extends U312Model {
   late MqttProviderInterface _mqttProvider;
   late final String _mqttAddress;
   late U312BoxApi _box;
-  
+
   @override
   Future<void> connect() async {
     await _box.connect();
@@ -85,8 +86,30 @@ class U312ModelBridge extends U312Model {
             developer.log('Setting MA to $value');
             super.multiAdjustDial = value;
             _updateMALevel();
+          default:
+            developer.log('Unknown set command: $command');
         }
+      // _ack();
+      case 'SYN':
+        developer.log('Client request SYN/ACK');
+        _ack();
+      case 'ACK':
+        developer.log('Ignore acknowledge command: ${parts[1]}');
+      // Handle ACK messages if needed
+      default:
+        developer.log('Unknown command: $command');
     }
+  }
+
+  Future<void> _ack() async {
+    final ackData = {
+      'mode': mode.value,
+      'chA': chADial,
+      'chB': chBDial,
+      'aAndB': aAndBDial,
+      'ma': multiAdjustDial,
+    };
+    _mqttProvider.publish('ACK_${jsonEncode(ackData)}');
   }
 
   Future<void> _updatePowerLevels() async {
