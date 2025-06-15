@@ -151,4 +151,16 @@ class U312ModelBridge extends U312Model {
   set multiAdjustDial(int value) {
     // do nothing
   }
+
+  // qr for linking
+  @override
+  String get deepLink {
+    final uri = Uri(
+      scheme: 'https',
+      host: 'cinlay4details.github.io',
+      path: 'r312',
+      queryParameters: {'remote': _mqttAddress},
+    );
+    return uri.toString();
+  }
 }

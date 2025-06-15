@@ -1,11 +1,9 @@
 import 'dart:developer' as developer;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:r312/models/u312_model_remote.dart';
 import 'package:r312/screens/box_twin_screen.dart';
 import 'package:r312/screens/widgets/connecting_wizard_page.dart';
 import 'package:r312/screens/widgets/mqtt_broker_wizard_page.dart';
-
 
 class RemoteControlWizard extends StatefulWidget {
   const RemoteControlWizard({super.key});

@@ -19,6 +19,7 @@ dependencies:
   hold_down_button: ^1.1.0
   material_symbols_icons: ^4.2815.0
   mqtt_client: ^10.8.0
+  qr_flutter: ^4.1.0
   serial: ^0.0.7+1
   web: ^1.1.1
 

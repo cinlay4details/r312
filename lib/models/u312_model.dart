@@ -101,6 +101,8 @@ abstract class U312Model extends ChangeNotifier {
 
   void disconnect();
 
+  String? get deepLink => null;
+
   Future<void> pressDisconnect() async {
     disconnect();
   }

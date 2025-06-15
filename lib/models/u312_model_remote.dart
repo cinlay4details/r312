@@ -145,4 +145,16 @@ class U312ModelRemote extends U312Model {
       );
     }
   }
+
+  // qr for linking
+  @override
+  String get deepLink {
+    final uri = Uri(
+      scheme: 'https',
+      host: 'cinlay4details.github.io',
+      path: 'r312',
+      queryParameters: {'remote': _address},
+    );
+    return uri.toString();
+  }
 }

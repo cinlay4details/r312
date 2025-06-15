@@ -93,6 +93,7 @@ class BoxTwinWidget extends StatelessWidget {
                           BoxControlsWidget(
                             leftPressed: appState.pressLeft,
                             rightPressed: appState.pressRight,
+                            deepLink: appState.deepLink,
                             disconnectPressed: () async {
                               await appState.pressDisconnect();
                               if (context.mounted) {
