@@ -41,13 +41,13 @@ class RS323Provider implements RS232ProviderInterface {
   Future<void> close() async {
     await _connection?.close();
     _buffer.clear();
+    await FlutterBackground.disableBackgroundExecution();
   }
 
   @override
   Future<void> open(String address, {int baudRate = 19200}) async {
     developer.log('use android');
     // background
-
     const config = FlutterBackgroundAndroidConfig(
       notificationTitle: 'flutter_background example app',
       notificationText:
@@ -55,11 +55,6 @@ class RS323Provider implements RS232ProviderInterface {
       notificationIcon: AndroidResource(name: 'background_icon'),
     );
     var hasPermissions = await FlutterBackground.hasPermissions;
-    // if (!hasPermissions) {
-    //   if (!hasPermissions) {
-    //     throw Exception('Background permissions not granted');
-    //   }
-    // }
     hasPermissions = await FlutterBackground.initialize(androidConfig: config);
     if (hasPermissions) {
       final backgroundExecution =
