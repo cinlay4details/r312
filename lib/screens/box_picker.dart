@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:r312/models/u312_model_stub.dart';
 import 'package:r312/screens/box_twin_screen.dart';
@@ -5,31 +7,51 @@ import 'package:r312/screens/bridge_wizard.dart';
 import 'package:r312/screens/direct_control_wizard.dart';
 import 'package:r312/screens/remote_control_wizard.dart';
 
+const enableTestStub = false;
+
 class BoxPicker extends StatelessWidget {
   const BoxPicker({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final remote = Uri.base.queryParameters['remote'];
+    if (remote != null && remote.isNotEmpty) {
+      // If 'remote' query parameter is present, navigate to RemoteControlWizard
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        developer.log(
+          'Navigating to RemoteControlWizard with remote: $remote',
+          name: 'BoxPicker',
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (context) => const RemoteControlWizard(),
+          ),
+        );
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Select Control Mode')),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildOption(
-              context,
-              icon: Icons.bug_report,
-              label: 'Test Stub',
-              onTap: () {
-                final model = U312ModelStub()..connect();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => BoxTwinWidget(appState: model),
-                  ),
-                );
-              },
-            ),
+            if (enableTestStub)
+              _buildOption(
+                context,
+                icon: Icons.bug_report,
+                label: 'Test Stub',
+                onTap: () {
+                  final model = U312ModelStub()..connect();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (context) => BoxTwinWidget(appState: model),
+                    ),
+                  );
+                },
+              ),
             _buildOption(
               context,
               icon: Icons.settings_remote,

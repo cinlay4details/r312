@@ -102,7 +102,7 @@ class _BridgeWizardState extends State<BridgeWizard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Direct Control Wizard'),
+        title: const Text('Bridge Wizard'),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () {
