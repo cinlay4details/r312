@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class BoxButtonWidget extends StatelessWidget {
-
   const BoxButtonWidget({
-    required this.onPressed, super.key,
+    required this.onPressed,
+    super.key,
     this.text,
     this.icon,
   }) : assert(
-    text != null || icon != null,
-    'Either text or icon must be provided',
-  );
+         text != null || icon != null,
+         'Either text or icon must be provided',
+       );
   final String? text;
   final IconData? icon;
   final VoidCallback onPressed;
@@ -29,20 +29,17 @@ class BoxButtonWidget extends StatelessWidget {
           fixedSize: const Size(50, 50), // Square size
           padding: EdgeInsets.zero, // Remove internal padding
         ),
-        child: text != null
-            ? Text(
-                text!,
-                style: const TextStyle(
-                  fontSize: 15,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w200, // Light font weight
-                ),
-              )
-            : Icon(
-                icon,
-                color: Colors.white,
-                size: 40,
-              ),
+        child:
+            text != null
+                ? Text(
+                  text!,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w200, // Light font weight
+                  ),
+                )
+                : Icon(icon, color: Colors.white, size: 40),
       ),
     );
   }

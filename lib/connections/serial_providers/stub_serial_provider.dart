@@ -14,8 +14,10 @@ class RS232Provider implements RS232ProviderInterface {
   }
 
   @override
-  Future<Uint8List?> read(int length, {
-    Duration timeout = const Duration(milliseconds: 1000),}) {
+  Future<Uint8List?> read(
+    int length, {
+    Duration timeout = const Duration(milliseconds: 1000),
+  }) {
     throw UnimplementedError('read() has not been implemented.');
   }
 
@@ -25,12 +27,7 @@ class RS232Provider implements RS232ProviderInterface {
   }
 
   @override
-  Future<
-    ({
-      List<({String address, String name})> devices,
-      bool supported,
-    })
-  >
+  Future<({List<({String address, String name})> devices, bool supported})>
   getSerialOptions() {
     throw UnimplementedError('getSerialOptions() has not been implemented.');
   }

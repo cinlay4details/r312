@@ -21,8 +21,7 @@ class BoxPicker extends StatelessWidget {
               icon: Icons.bug_report,
               label: 'Test Stub',
               onTap: () {
-                final model = U312ModelStub()
-                ..connect();
+                final model = U312ModelStub()..connect();
                 Navigator.push(
                   context,
                   MaterialPageRoute<void>(
@@ -52,8 +51,7 @@ class BoxPicker extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (context) => const BridgeWizard(
-                    ),
+                    builder: (context) => const BridgeWizard(),
                   ),
                 );
               },
@@ -66,8 +64,7 @@ class BoxPicker extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (context) => const RemoteControlWizard(
-                    ),
+                    builder: (context) => const RemoteControlWizard(),
                   ),
                 );
               },

@@ -7,10 +7,7 @@ import 'package:r312/screens/widgets/box_light_widget.dart';
 import 'package:r312/screens/widgets/box_screen_widget.dart';
 
 class BoxTwinWidget extends StatelessWidget {
-  const BoxTwinWidget({
-    required this.appState,
-    super.key,
-  });
+  const BoxTwinWidget({required this.appState, super.key});
 
   final U312Model appState;
 

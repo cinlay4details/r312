@@ -26,12 +26,7 @@ class RS232Provider implements RS232ProviderInterface {
   late RS232ProviderInterface _implementation;
 
   @override
-  Future<
-    ({
-      List<({String address, String name})> devices,
-      bool supported,
-    })
-  >
+  Future<({List<({String address, String name})> devices, bool supported})>
   getSerialOptions() async {
     return _implementation.getSerialOptions();
   }
@@ -47,7 +42,8 @@ class RS232Provider implements RS232ProviderInterface {
   }
 
   @override
-  Future<Uint8List?> read(int length, {
+  Future<Uint8List?> read(
+    int length, {
     Duration timeout = const Duration(milliseconds: 1000),
   }) async {
     return _implementation.read(length, timeout: timeout);

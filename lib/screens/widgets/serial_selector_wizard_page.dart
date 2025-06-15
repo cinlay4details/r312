@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class SerialSelectorWizardPage extends StatelessWidget {
   const SerialSelectorWizardPage({
     required this.devices,
-    required this.onSelect, super.key,
+    required this.onSelect,
+    super.key,
   });
 
   final List<({String address, String name})> devices;

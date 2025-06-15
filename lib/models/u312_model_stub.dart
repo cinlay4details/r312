@@ -7,6 +7,5 @@ class U312ModelStub extends U312Model {
   }
 
   @override
-  void disconnect() {
-  }
+  void disconnect() {}
 }

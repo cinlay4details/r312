@@ -13,13 +13,9 @@ enum Mode {
   torment(name: 'Torment', value: 0x84),
   phase_1(name: 'Phase 1', value: 0x85),
   phase_2(name: 'Phase 2', value: 0x86),
-  phase_3(name: 'Phase 3', value: 0x87),
-  ;
+  phase_3(name: 'Phase 3', value: 0x87);
 
-  const Mode({
-    required this.name,
-    required this.value,
-  });
+  const Mode({required this.name, required this.value});
 
   final String name;
   final int value;

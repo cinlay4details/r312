@@ -12,10 +12,8 @@ class RS323Provider implements RS232ProviderInterface {
   final List<int> _buffer = [];
 
   @override
-  Future<({
-    List<({String address, String name})> devices,
-    bool supported
-  })> getSerialOptions() async {
+  Future<({List<({String address, String name})> devices, bool supported})>
+  getSerialOptions() async {
     final blueClassic = FlutterBlueClassic(usesFineLocation: true);
     final devices = await blueClassic.bondedDevices;
     if (devices == null || devices.isEmpty) {
@@ -25,14 +23,15 @@ class RS323Provider implements RS232ProviderInterface {
       'bonded devices: ${devices.map((device) => device.name).toList()}',
     );
     return (
-      devices: devices
-          .map(
-            (device) => (
-              address: device.address,
-              name: device.name ?? 'Unknown (${device.address})',
-            ),
-          )
-          .toList(),
+      devices:
+          devices
+              .map(
+                (device) => (
+                  address: device.address,
+                  name: device.name ?? 'Unknown (${device.address})',
+                ),
+              )
+              .toList(),
       supported: true,
     );
   }
@@ -79,7 +78,8 @@ class RS323Provider implements RS232ProviderInterface {
   }
 
   @override
-  Future<Uint8List?> read(int length, {
+  Future<Uint8List?> read(
+    int length, {
     Duration timeout = const Duration(milliseconds: 1000),
   }) async {
     var time = 0;

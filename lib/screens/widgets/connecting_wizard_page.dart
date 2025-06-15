@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class ConnectingWizardPage extends StatelessWidget {
   const ConnectingWizardPage({
-    required ValueNotifier<String?> connectionErrorNotifier, super.key,
+    required ValueNotifier<String?> connectionErrorNotifier,
+    super.key,
   }) : _connectionErrorNotifier = connectionErrorNotifier;
 
   final ValueNotifier<String?> _connectionErrorNotifier;

@@ -8,8 +8,7 @@ abstract class U312Model extends ChangeNotifier {
   double get volume => 1;
 
   // public read state only
-  final _screenText = ['      ^__^      ',
-                       '      r312      ',];
+  final _screenText = ['      ^__^      ', '      r312      '];
   List<String> get screenText => _screenText;
 
   double _chA = 0; // chA light
@@ -35,7 +34,7 @@ abstract class U312Model extends ChangeNotifier {
       'A${_getDialReadingAsDisplay(aLevel)}',
       'B${_getDialReadingAsDisplay(bLevel)}',
       ' ${_mode.name}',
-     ].join(' ');
+    ].join(' ');
     final maLevel = _multiAdjustDial / 255;
     _screenText[1] = [
       'MA   ${_getDialReadingAsDisplay(maLevel)}',
@@ -106,8 +105,11 @@ abstract class U312Model extends ChangeNotifier {
     disconnect();
   }
 
-  Future<void> init(String connectionType) async {
+  Future<void> init(String connectionType, {bool reset = true}) async {
     _connectionType = connectionType;
+    if (!reset) {
+      return;
+    }
     mode = Mode.wave;
     chADial = 0;
     chBDial = 0;

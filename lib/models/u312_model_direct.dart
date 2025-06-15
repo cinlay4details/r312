@@ -64,5 +64,4 @@ class U312ModelDirect extends U312Model {
     super.multiAdjustDial = value;
     _updateMALevel();
   }
-
 }

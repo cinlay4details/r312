@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-class BoxLightWidget extends StatelessWidget { // Brightness value (0.0 to 1.0)
+class BoxLightWidget extends StatelessWidget {
+  // Brightness value (0.0 to 1.0)
 
   const BoxLightWidget({
-    required this.brightness, super.key,
+    required this.brightness,
+    super.key,
     this.icon, // Icon is optional
     this.channel, // Channel is optional
   });

@@ -6,12 +6,11 @@ import 'package:r312/connections/mqtt_providers/mqtt_provider.dart';
 import 'package:r312/utils/parse_mqtt_url.dart';
 
 class MqttProvider implements MqttProviderInterface {
-
   MqttProvider({required this.onMessage});
   final void Function(String message) onMessage;
 
   late MqttBrowserClient _client;
-  
+
   String _topic = 'test';
   bool isConnected = false;
 
@@ -19,18 +18,19 @@ class MqttProvider implements MqttProviderInterface {
   Future<bool> connect(String address) async {
     developer.log('mqtt connect $address');
     final options = parseMqttUrl(address);
-    
+
     _client = MqttBrowserClient('${options.protocol}://${options.host}', '');
     _client.port = options.port;
 
-    _client..setProtocolV311()
-    ..websocketProtocols = MqttClientConstants.protocolsSingleDefault
-    ..keepAlivePeriod = 20
-    ..connectTimeoutPeriod = 5000 // milliseconds
-    ..onDisconnected = _onDisconnected;
+    _client
+      ..setProtocolV311()
+      ..websocketProtocols = MqttClientConstants.protocolsSingleDefault
+      ..keepAlivePeriod = 20
+      ..connectTimeoutPeriod =
+          5000 // milliseconds
+      ..onDisconnected = _onDisconnected;
 
-    final connectionMessage = MqttConnectMessage()
-      .startClean();
+    final connectionMessage = MqttConnectMessage().startClean();
     _client.connectionMessage = connectionMessage;
 
     try {
@@ -74,8 +74,7 @@ class MqttProvider implements MqttProviderInterface {
 
   @override
   void publish(String message) {
-    final builder = MqttClientPayloadBuilder()
-    ..addString(message);
+    final builder = MqttClientPayloadBuilder()..addString(message);
     _client.publishMessage(_topic, MqttQos.atMostOnce, builder.payload!);
-  } 
+  }
 }

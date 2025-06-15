@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SerialUnavailableWizardPage extends StatelessWidget {
-  const SerialUnavailableWizardPage({
-    super.key,
-  });
+  const SerialUnavailableWizardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
