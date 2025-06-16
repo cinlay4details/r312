@@ -105,10 +105,26 @@ class U312BoxApi {
     _requestUpdateState();
   }
 
+  Future<void> setChannelLevelV2(Channel channel, int level) async {
+    final safeLevel = ((level / 99) * 255).round().clamp(0, 255);
+    if (channel == Channel.a) {
+      _targetState.channelA = safeLevel;
+    } else {
+      _targetState.channelB = safeLevel;
+    }
+    _requestUpdateState();
+  }
+
   Future<void> _setChannelLevel(Channel channel, int level) async {
     final address = channel == Channel.a ? 0x4064 : 0x4065;
     await box.poke(address, Uint8List.fromList([level]));
     developer.log('Channel ${channel.name.toUpperCase()} Level: $level');
+  }
+
+  Future<void> setMALevelV2(int level) async {
+    final safeLevel = (level / 99).clamp(0.0, 1.0);
+    _targetState.maLevel = safeLevel;
+    _requestUpdateState();
   }
 
   Future<void> setMALevel(double level) async {
@@ -131,6 +147,7 @@ class U312BoxApi {
 
   Future<void> switchToMode(Mode mode) async {
     _targetState.mode = mode;
+    _remoteState.maLevel = -1; // changing mode changes ma bands
     _requestUpdateState();
   }
 

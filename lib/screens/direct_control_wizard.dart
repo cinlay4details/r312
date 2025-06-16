@@ -3,8 +3,8 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:r312/connections/serial_providers/platform_serial_provider.dart';
 import 'package:r312/connections/serial_providers/rs232_provider.dart';
-import 'package:r312/models/u312_model_direct.dart';
-import 'package:r312/screens/box_twin_screen.dart';
+import 'package:r312/models/u312_model_direct_v2.dart';
+import 'package:r312/screens/panels/direct_control_panel.dart';
 import 'package:r312/screens/widgets/connecting_wizard_page.dart';
 import 'package:r312/screens/widgets/serial_selector_wizard_page.dart';
 import 'package:r312/screens/widgets/serial_unavailable_wizard_page.dart';
@@ -53,13 +53,13 @@ class _DirectControlWizardState extends State<DirectControlWizard> {
                 });
 
                 try {
-                  final model = U312ModelDirect(_selectedDeviceAddress!);
+                  final model = U312ModelDirectV2(_selectedDeviceAddress!);
                   await model.connect();
                   if (mounted) {
                     await Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute<BoxTwinWidget>(
-                        builder: (context) => BoxTwinWidget(appState: model),
+                      MaterialPageRoute<DirectControlPanel>(
+                        builder: (context) => DirectControlPanel(model: model),
                       ),
                     );
                   }

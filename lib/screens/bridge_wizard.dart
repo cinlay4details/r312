@@ -3,8 +3,8 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:r312/connections/serial_providers/platform_serial_provider.dart';
 import 'package:r312/connections/serial_providers/rs232_provider.dart';
-import 'package:r312/models/u312_model_bridge.dart';
-import 'package:r312/screens/box_twin_screen.dart';
+import 'package:r312/models/u312_model_bridge_v2.dart';
+import 'package:r312/screens/panels/bridge_control_panel.dart';
 import 'package:r312/screens/widgets/connecting_wizard_page.dart';
 import 'package:r312/screens/widgets/mqtt_broker_wizard_page.dart';
 import 'package:r312/screens/widgets/serial_selector_wizard_page.dart';
@@ -63,7 +63,7 @@ class _BridgeWizardState extends State<BridgeWizard> {
                 });
 
                 try {
-                  final model = U312ModelBridge(
+                  final model = U312ModelBridgeV2(
                     _selectedDeviceAddress ?? '',
                     address,
                   );
@@ -73,8 +73,8 @@ class _BridgeWizardState extends State<BridgeWizard> {
                     // Explicitly check if the widget is still mounted
                     await Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute<BoxTwinWidget>(
-                        builder: (context) => BoxTwinWidget(appState: model),
+                      MaterialPageRoute<BridgeControlPanel>(
+                        builder: (context) => BridgeControlPanel(model: model),
                       ),
                     );
                   }

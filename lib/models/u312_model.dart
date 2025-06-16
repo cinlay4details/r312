@@ -115,7 +115,7 @@ abstract class U312Model extends ChangeNotifier {
     mode = Mode.wave;
     chADial = 0;
     chBDial = 0;
-    aAndBDial = 0;
+    aAndBDial = 255;
     multiAdjustDial = 0;
   }
 }

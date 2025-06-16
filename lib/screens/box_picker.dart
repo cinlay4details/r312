@@ -7,7 +7,7 @@ import 'package:r312/screens/bridge_wizard.dart';
 import 'package:r312/screens/direct_control_wizard.dart';
 import 'package:r312/screens/remote_control_wizard.dart';
 
-const enableTestStub = false;
+const enableTestStub = true;
 
 class BoxPicker extends StatelessWidget {
   const BoxPicker({super.key});
