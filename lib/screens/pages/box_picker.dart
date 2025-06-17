@@ -5,12 +5,13 @@ import 'package:r312/models/u312_model_stub.dart';
 import 'package:r312/screens/pages/bridge_wizard.dart';
 import 'package:r312/screens/pages/direct_control_wizard.dart';
 import 'package:r312/screens/pages/remote_control_wizard.dart';
-import 'package:r312/screens/panels/stub_control_panel.dart';
 
 const enableTestStub = true;
 
 class BoxPicker extends StatelessWidget {
-  const BoxPicker({super.key});
+  const BoxPicker({required this.onPanelPicked, super.key});
+
+  final void Function(dynamic model)? onPanelPicked;
 
   @override
   Widget build(BuildContext context) {
@@ -43,24 +44,20 @@ class BoxPicker extends StatelessWidget {
                 icon: Icons.bug_report,
                 label: 'Test Stub',
                 onTap: () {
-                  final model = U312ModelStub();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (context) => StubControlPanel(model: model),
-                    ),
-                  );
+                  onPanelPicked?.call(U312ModelStub());
                 },
               ),
             _buildOption(
               context,
               icon: Icons.settings_remote,
               label: 'Direct Control',
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => const DirectControlWizard(),
+                  MaterialPageRoute<DirectControlWizard>(
+                    builder:
+                        (context) =>
+                            DirectControlWizard(onPanelPicked: onPanelPicked),
                   ),
                 );
               },
@@ -69,11 +66,12 @@ class BoxPicker extends StatelessWidget {
               context,
               icon: Icons.link,
               label: 'Bridge',
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => const BridgeWizard(),
+                  MaterialPageRoute<BridgeWizard>(
+                    builder:
+                        (context) => BridgeWizard(onPanelPicked: onPanelPicked),
                   ),
                 );
               },
@@ -82,11 +80,13 @@ class BoxPicker extends StatelessWidget {
               context,
               icon: Icons.wifi,
               label: 'Remote Control',
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => const RemoteControlWizard(),
+                  MaterialPageRoute<RemoteControlWizard>(
+                    builder:
+                        (context) =>
+                            RemoteControlWizard(onPanelPicked: onPanelPicked),
                   ),
                 );
               },

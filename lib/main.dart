@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:r312/screens/pages/box_picker.dart';
+import 'package:r312/screens/box_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         ),
         fontFamily: GoogleFonts.lato().fontFamily,
       ),
-      home: const BoxPicker(),
+      home: const BoxListPage(),
     );
   }
 }

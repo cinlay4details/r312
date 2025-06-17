@@ -7,10 +7,11 @@ import 'package:r312/models/u312_model_direct.dart';
 import 'package:r312/screens/pages/wizard/connecting_wizard_page.dart';
 import 'package:r312/screens/pages/wizard/serial_selector_wizard_page.dart';
 import 'package:r312/screens/pages/wizard/serial_unavailable_wizard_page.dart';
-import 'package:r312/screens/panels/direct_control_panel.dart';
 
 class DirectControlWizard extends StatefulWidget {
-  const DirectControlWizard({super.key});
+  const DirectControlWizard({this.onPanelPicked, super.key});
+
+  final void Function(dynamic model)? onPanelPicked;
 
   @override
   State<DirectControlWizard> createState() => _DirectControlWizardState();
@@ -56,12 +57,8 @@ class _DirectControlWizardState extends State<DirectControlWizard> {
                   final model = U312ModelDirect(_selectedDeviceAddress!);
                   await model.connect();
                   if (mounted) {
-                    await Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute<DirectControlPanel>(
-                        builder: (context) => DirectControlPanel(model: model),
-                      ),
-                    );
+                    widget.onPanelPicked?.call(model);
+                    Navigator.pop(context);
                   }
                   // ignore: avoid_catches_without_on_clauses show all errors
                 } catch (e) {

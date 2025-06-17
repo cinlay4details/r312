@@ -8,10 +8,11 @@ import 'package:r312/screens/pages/wizard/connecting_wizard_page.dart';
 import 'package:r312/screens/pages/wizard/mqtt_broker_wizard_page.dart';
 import 'package:r312/screens/pages/wizard/serial_selector_wizard_page.dart';
 import 'package:r312/screens/pages/wizard/serial_unavailable_wizard_page.dart';
-import 'package:r312/screens/panels/bridge_control_panel.dart';
 
 class BridgeWizard extends StatefulWidget {
-  const BridgeWizard({super.key});
+  const BridgeWizard({this.onPanelPicked, super.key});
+
+  final void Function(dynamic model)? onPanelPicked;
 
   @override
   State<BridgeWizard> createState() => _BridgeWizardState();
@@ -71,12 +72,8 @@ class _BridgeWizardState extends State<BridgeWizard> {
                   // Handle successful connection
                   if (mounted) {
                     // Explicitly check if the widget is still mounted
-                    await Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute<BridgeControlPanel>(
-                        builder: (context) => BridgeControlPanel(model: model),
-                      ),
-                    );
+                    widget.onPanelPicked?.call(model);
+                    Navigator.pop(context);
                   }
 
                   // ignore: avoid_catches_without_on_clauses allow all failures

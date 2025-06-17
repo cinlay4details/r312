@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:r312/models/u312_model_remote.dart';
 import 'package:r312/screens/pages/wizard/connecting_wizard_page.dart';
 import 'package:r312/screens/pages/wizard/mqtt_broker_wizard_page.dart';
-import 'package:r312/screens/panels/remote_control_panel.dart';
 
 class RemoteControlWizard extends StatefulWidget {
-  const RemoteControlWizard({super.key});
+  const RemoteControlWizard({this.onPanelPicked, super.key});
+
+  final void Function(dynamic model)? onPanelPicked;
 
   @override
   State<RemoteControlWizard> createState() => _RemoteControlWizardState();
@@ -29,12 +30,8 @@ class _RemoteControlWizardState extends State<RemoteControlWizard> {
       final model = U312ModelRemote(address);
       await model.connect();
       if (mounted) {
-        await Navigator.pushReplacement(
-          context,
-          MaterialPageRoute<RemoteControlPanel>(
-            builder: (context) => RemoteControlPanel(model: model),
-          ),
-        );
+        widget.onPanelPicked?.call(model);
+        Navigator.pop(context);
       }
       // ignore: avoid_catches_without_on_clauses show all errors
     } catch (e) {
