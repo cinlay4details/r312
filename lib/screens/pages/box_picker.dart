@@ -2,10 +2,10 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:r312/models/u312_model_stub.dart';
-import 'package:r312/screens/box_twin_screen.dart';
-import 'package:r312/screens/bridge_wizard.dart';
-import 'package:r312/screens/direct_control_wizard.dart';
-import 'package:r312/screens/remote_control_wizard.dart';
+import 'package:r312/screens/pages/bridge_wizard.dart';
+import 'package:r312/screens/pages/direct_control_wizard.dart';
+import 'package:r312/screens/pages/remote_control_wizard.dart';
+import 'package:r312/screens/panels/stub_control_panel.dart';
 
 const enableTestStub = true;
 
@@ -43,11 +43,11 @@ class BoxPicker extends StatelessWidget {
                 icon: Icons.bug_report,
                 label: 'Test Stub',
                 onTap: () {
-                  final model = U312ModelStub()..connect();
+                  final model = U312ModelStub();
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                      builder: (context) => BoxTwinWidget(appState: model),
+                      builder: (context) => StubControlPanel(model: model),
                     ),
                   );
                 },

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:r312/models/u312_model_bridge_v2.dart';
+import 'package:r312/models/u312_model_bridge.dart';
 
 class BridgeControlPanel extends StatelessWidget {
   const BridgeControlPanel({required this.model, super.key});
-  final U312ModelBridgeV2 model;
+  final U312ModelBridge model;
 
   @override
   Widget build(BuildContext context) {

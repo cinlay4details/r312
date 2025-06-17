@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:r312/screens/box_picker.dart';
+import 'package:r312/screens/pages/box_picker.dart';
 
 void main() {
   runApp(const MyApp());

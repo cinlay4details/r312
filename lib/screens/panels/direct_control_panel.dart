@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:r312/api/modes.dart';
-import 'package:r312/models/u312_model_direct_v2.dart';
+import 'package:r312/models/u312_model_direct.dart';
 import 'package:r312/screens/widgets/mode_picker_widget.dart';
 import 'package:r312/screens/widgets/pot_picker_widget.dart';
 
 class DirectControlPanel extends StatelessWidget {
   const DirectControlPanel({required this.model, super.key});
-  final U312ModelDirectV2 model;
+  final U312ModelDirect model;
 
   @override
   Widget build(BuildContext context) {

@@ -2,66 +2,51 @@ import 'dart:async';
 
 import 'package:r312/api/modes.dart';
 import 'package:r312/api/u312_box_api.dart';
-import 'package:r312/models/u312_model.dart';
 
-class U312ModelDirect extends U312Model {
+class U312ModelDirect {
   U312ModelDirect(String address) {
     _box = U312BoxApi(address);
   }
   late U312BoxApi _box;
 
-  @override
   Future<void> connect() async {
     await _box.connect();
-    await init('Direct');
+    // reset
+    await _box.setChannelLevelV2(Channel.a, _channelA);
+    await _box.setChannelLevelV2(Channel.b, _channelB);
+    await _box.setMALevelV2(_multiAdjust);
+    await _box.switchToMode(_mode);
   }
 
-  @override
   Future<void> disconnect() async {
     await _box.close();
   }
 
-  @override
+  Mode _mode = Mode.wave;
+  Mode get mode => _mode;
   set mode(Mode value) {
-    super.mode = value;
-    _box.switchToMode(super.mode);
+    _mode = value;
+    _box.switchToMode(_mode);
   }
 
-  Future<void> _updatePowerLevels() async {
-    final aLevel = (((aAndBDial * chADial) / (255 * 255)) * 255).round();
-    final bLevel = (((aAndBDial * chBDial) / (255 * 255)) * 255).round();
-    // the a&b dial is virtual
-    await _box.setChannelLevel(Channel.a, aLevel);
-    await _box.setChannelLevel(Channel.b, bLevel);
+  int _channelA = 0;
+  int get channelA => _channelA;
+  set channelA(int value) {
+    _channelA = value.clamp(0, 99);
+    _box.setChannelLevelV2(Channel.a, _channelA);
   }
 
-  @override
-  set chADial(int value) {
-    super.chADial = value;
-    _updatePowerLevels();
+  int _channelB = 0;
+  int get channelB => _channelB;
+  set channelB(int value) {
+    _channelB = value.clamp(0, 99);
+    _box.setChannelLevelV2(Channel.b, _channelB);
   }
 
-  @override
-  set chBDial(int value) {
-    super.chBDial = value;
-    _updatePowerLevels();
-  }
-
-  @override
-  set aAndBDial(int value) {
-    super.aAndBDial = value;
-    _updatePowerLevels();
-  }
-
-  Future<void> _updateMALevel() async {
-    final maLevel = multiAdjustDial / 255;
-    // the a&b dial is virtual
-    await _box.setMALevel(maLevel);
-  }
-
-  @override
-  set multiAdjustDial(int value) {
-    super.multiAdjustDial = value;
-    _updateMALevel();
+  int _multiAdjust = 0;
+  int get multiAdjust => _multiAdjust;
+  set multiAdjust(int value) {
+    _multiAdjust = value.clamp(0, 99);
+    _box.setMALevelV2(_multiAdjust);
   }
 }

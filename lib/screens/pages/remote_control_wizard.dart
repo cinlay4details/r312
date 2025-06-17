@@ -1,9 +1,10 @@
 import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
-import 'package:r312/models/u312_model_remote_v2.dart';
+import 'package:r312/models/u312_model_remote.dart';
+import 'package:r312/screens/pages/wizard/connecting_wizard_page.dart';
+import 'package:r312/screens/pages/wizard/mqtt_broker_wizard_page.dart';
 import 'package:r312/screens/panels/remote_control_panel.dart';
-import 'package:r312/screens/widgets/connecting_wizard_page.dart';
-import 'package:r312/screens/widgets/mqtt_broker_wizard_page.dart';
 
 class RemoteControlWizard extends StatefulWidget {
   const RemoteControlWizard({super.key});
@@ -25,7 +26,7 @@ class _RemoteControlWizardState extends State<RemoteControlWizard> {
     });
 
     try {
-      final model = U312ModelRemoteV2(address);
+      final model = U312ModelRemote(address);
       await model.connect();
       if (mounted) {
         await Navigator.pushReplacement(

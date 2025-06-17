@@ -3,12 +3,12 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:r312/connections/serial_providers/platform_serial_provider.dart';
 import 'package:r312/connections/serial_providers/rs232_provider.dart';
-import 'package:r312/models/u312_model_bridge_v2.dart';
+import 'package:r312/models/u312_model_bridge.dart';
+import 'package:r312/screens/pages/wizard/connecting_wizard_page.dart';
+import 'package:r312/screens/pages/wizard/mqtt_broker_wizard_page.dart';
+import 'package:r312/screens/pages/wizard/serial_selector_wizard_page.dart';
+import 'package:r312/screens/pages/wizard/serial_unavailable_wizard_page.dart';
 import 'package:r312/screens/panels/bridge_control_panel.dart';
-import 'package:r312/screens/widgets/connecting_wizard_page.dart';
-import 'package:r312/screens/widgets/mqtt_broker_wizard_page.dart';
-import 'package:r312/screens/widgets/serial_selector_wizard_page.dart';
-import 'package:r312/screens/widgets/serial_unavailable_wizard_page.dart';
 
 class BridgeWizard extends StatefulWidget {
   const BridgeWizard({super.key});
@@ -63,7 +63,7 @@ class _BridgeWizardState extends State<BridgeWizard> {
                 });
 
                 try {
-                  final model = U312ModelBridgeV2(
+                  final model = U312ModelBridge(
                     _selectedDeviceAddress ?? '',
                     address,
                   );
