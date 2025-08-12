@@ -23,7 +23,7 @@ class _BridgeWizardState extends State<BridgeWizard> {
   bool _isLoading = true;
   bool _isSupported = true;
   late final RS232ProviderInterface? _serialProvider;
-  late String? _selectedDeviceAddress;
+  late String? _mqttAddress;
   final ValueNotifier<String?> _connectionErrorNotifier = ValueNotifier(null);
 
   final List<Widget> _pages = [];
@@ -45,28 +45,28 @@ class _BridgeWizardState extends State<BridgeWizard> {
       } else {
         _pages
           ..add(
-            SerialSelectorWizardPage(
-              devices: options.devices,
+            MqttBrokerWizardPage(
               onSelect: (String address) async {
                 setState(() {
-                  _selectedDeviceAddress = address;
+                  _mqttAddress = address;
                   _currentPage += 1; // Navigate to the "connecting" page
                 });
               },
             ),
           )
           ..add(
-            MqttBrokerWizardPage(
+            SerialSelectorWizardPage(
+              devices: options.devices,
               onSelect: (String address) async {
                 setState(() {
-                  _currentPage += 1; // Navigate to the "connecting" page
                   _connectionErrorNotifier.value = null; // Reset error state
+                  _currentPage += 1; // Navigate to the "connecting" page
                 });
 
                 try {
                   final model = U312ModelBridge(
-                    _selectedDeviceAddress ?? '',
                     address,
+                    _mqttAddress ?? '',
                   );
                   await model.connect();
                   // Handle successful connection
