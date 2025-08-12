@@ -96,24 +96,33 @@ class _BoxListPageState extends State<BoxListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('r312')),
-      body: ListView.builder(
-        itemCount: _panels.length + 1,
-        itemBuilder: (context, index) {
-          if (index < _panels.length) {
-            return _buildPanel(_panels[index]);
-          }
-          // Last item: [+] button
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Center(
-              child: IconButton(
-                icon: const Icon(Icons.add_circle_outline, size: 48),
-                tooltip: 'Add Panel',
-                onPressed: _showBoxPicker,
-              ),
-            ),
-          );
-        },
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 840),
+          child: ListView.builder(
+            itemCount: _panels.length + 1,
+            itemBuilder: (context, index) {
+              if (index < _panels.length) {
+                return _buildPanel(_panels[index]);
+              }
+              // Last item: [+] button
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Center(
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.add_circle_outline,
+                      size: 48,
+                      color: Colors.yellow, // <-- set icon color to yellow
+                    ),
+                    tooltip: 'Add Panel',
+                    onPressed: _showBoxPicker,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

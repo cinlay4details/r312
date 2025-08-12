@@ -29,7 +29,10 @@ class DirectControlPanel extends StatelessWidget {
             ),
             Expanded(
               child: IconButton(
-                icon: const Icon(Icons.close),
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.yellow, // <-- yellow icon
+                ),
                 tooltip: 'Remove Panel',
                 onPressed: () async {
                   await model.disconnect();
