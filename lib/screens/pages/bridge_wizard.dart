@@ -64,10 +64,7 @@ class _BridgeWizardState extends State<BridgeWizard> {
                 });
 
                 try {
-                  final model = U312ModelBridge(
-                    address,
-                    _mqttAddress ?? '',
-                  );
+                  final model = U312ModelBridge(address, _mqttAddress ?? '');
                   await model.connect();
                   // Handle successful connection
                   if (mounted) {
