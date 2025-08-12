@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'dart:async';
 import 'dart:typed_data';
 
@@ -17,8 +18,23 @@ class RS232Provider implements RS232ProviderInterface {
         allPorts.add(port.replaceFirst('/dev/cu.', '/dev/tty.'));
       }
     }
+
+    final sortedPorts = allPorts.toList()
+      ..sort((a, b) {
+        int score(String s) {
+          if (s.contains('312') && s.contains('/tty')) return -1;
+          if (s.contains('312')) return 0;
+          if (s.contains('/tty')) return 1;
+          return 2;
+        }
+        final scoreA = score(a);
+        final scoreB = score(b);
+        if (scoreA != scoreB) return scoreA.compareTo(scoreB);
+        return a.compareTo(b);
+      });
+
     final fullPortList =
-        allPorts
+        sortedPorts
             .map(
               (port) => (
                 address: port,
@@ -29,6 +45,7 @@ class RS232Provider implements RS232ProviderInterface {
               ),
             )
             .toList();
+
     return Future.value((supported: true, devices: fullPortList));
   }
 

@@ -22,18 +22,33 @@ class RS323Provider implements RS232ProviderInterface {
     developer.log(
       'bonded devices: ${devices.map((device) => device.name).toList()}',
     );
-    return (
-      devices:
-          devices
-              .map(
-                (device) => (
-                  address: device.address,
-                  name: device.name ?? 'Unknown (${device.address})',
-                ),
-              )
-              .toList(),
-      supported: true,
-    );
+    final deviceList =
+        devices
+            // .where((device) => device.bondState == BluetoothBondState.bonded)
+            .where((device) {
+              developer.log(
+                'Device: ${device.name}, Address: ${device.address}',
+              );
+              developer.log('Bond State: ${device.bondState}');
+              developer.log('Device Type: ${device.type}');
+              developer.log('Rssi: ${device.rssi}');
+              return true;
+            })
+            .map(
+              (device) => (
+                address: device.address,
+                name: device.name ?? 'Unknown (${device.address})',
+              ),
+            )
+            .toList()
+          ..sort((a, b) {
+            final aHas312 = a.name.contains('312');
+            final bHas312 = b.name.contains('312');
+            if (aHas312 && !bHas312) return -1;
+            if (!aHas312 && bHas312) return 1;
+            return a.name.compareTo(b.name);
+          });
+    return (devices: deviceList, supported: true);
   }
 
   @override
