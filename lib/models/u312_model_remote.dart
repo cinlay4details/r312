@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as developer;
 
+import 'package:r312/api/connection_info.dart';
 import 'package:r312/api/modes.dart';
 import 'package:r312/api/u312_box_api.dart';
 import 'package:r312/connections/mqtt_providers/mqtt_provider.dart';
@@ -15,16 +16,25 @@ class U312ModelRemote {
   late MqttProviderInterface _mqttProvider;
   late final String _address;
   late final Timer _synTimer;
+  final ConnectionInfo connectionInfo = ConnectionInfo();
 
   Future<void> connect() async {
-    await _mqttProvider.connect(_address);
-    _mqttProvider.publish('SYN');
-    _synTimer = Timer.periodic(const Duration(seconds: 60), (timer) {
+    try {
+      await _mqttProvider.connect(_address);
       _mqttProvider.publish('SYN');
-    });
+      _synTimer = Timer.periodic(const Duration(seconds: 60), (timer) {
+        _mqttProvider.publish('SYN');
+      });
+      connectionInfo.status = ConnectionStatus.connected;
+      // ignore: avoid_catches_without_on_clauses (error is shown)
+    } catch (e) {
+      connectionInfo.status = ConnectionStatus.error;
+      connectionInfo.errorMessage = e.toString();
+    }
   }
 
   Future<void> disconnect() async {
+    connectionInfo.status = ConnectionStatus.disconnecting;
     _synTimer.cancel();
     _mqttProvider.disconnect();
   }

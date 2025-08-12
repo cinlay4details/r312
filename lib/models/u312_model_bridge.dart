@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
 
+import 'package:r312/api/connection_info.dart';
 import 'package:r312/api/modes.dart';
 import 'package:r312/api/u312_box_api.dart';
 import 'package:r312/connections/mqtt_providers/mqtt_provider.dart';
@@ -12,23 +13,46 @@ class U312ModelBridge {
     _mqttProvider = MqttProvider(onMessage: _onMqttMessage);
     _mqttAddress = mqttAddress;
   }
+  final ConnectionInfo boxConnectionInfo = ConnectionInfo();
+  final ConnectionInfo mqttConnectionInfo = ConnectionInfo();
   late MqttProviderInterface _mqttProvider;
   late final String _mqttAddress;
   late U312BoxApi _box;
 
   Future<void> connect() async {
-    await _box.connect();
-    await _mqttProvider.connect(_mqttAddress);
-    // reset
-    await _box.setChannelLevelV2(Channel.a, _channelA);
-    await _box.setChannelLevelV2(Channel.b, _channelB);
-    await _box.setMALevelV2(_multiAdjust);
-    await _box.switchToMode(_mode);
+    try {
+      await _box.connect();
+      // reset
+      await _box.setChannelLevelV2(Channel.a, _channelA);
+      await _box.setChannelLevelV2(Channel.b, _channelB);
+      await _box.setMALevelV2(_multiAdjust);
+      await _box.switchToMode(_mode);
+      boxConnectionInfo.status = ConnectionStatus.connected;
+      // ignore: avoid_catches_without_on_clauses (error is shown)
+    } catch (e) {
+      boxConnectionInfo.status = ConnectionStatus.error;
+      boxConnectionInfo.errorMessage = e.toString();
+    }
+    try {
+      await _mqttProvider.connect(_mqttAddress);
+      mqttConnectionInfo.status = ConnectionStatus.connected;
+      // ignore: avoid_catches_without_on_clauses (error is shown)
+    } catch (e) {
+      mqttConnectionInfo.status = ConnectionStatus.error;
+      mqttConnectionInfo.errorMessage = e.toString();
+    }
   }
 
   Future<void> disconnect() async {
-    _mqttProvider.disconnect();
-    await _box.close();
+    try {
+      mqttConnectionInfo.status = ConnectionStatus.disconnecting;
+      boxConnectionInfo.status = ConnectionStatus.disconnecting;
+      _mqttProvider.disconnect();
+      await _box.close();
+      // ignore: avoid_catches_without_on_clauses (error is logged)
+    } catch (e) {
+      developer.log('Error disconnecting: $e');
+    }
   }
 
   Mode _mode = Mode.wave;

@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
+import 'package:r312/api/connection_info.dart';
 import 'package:r312/api/modes.dart';
 import 'package:r312/api/u312_box_api.dart';
 
@@ -7,19 +9,33 @@ class U312ModelDirect {
   U312ModelDirect(String address) {
     _box = U312BoxApi(address);
   }
+  final ConnectionInfo connectionInfo = ConnectionInfo();
   late U312BoxApi _box;
 
   Future<void> connect() async {
-    await _box.connect();
-    // reset
-    await _box.setChannelLevelV2(Channel.a, _channelA);
-    await _box.setChannelLevelV2(Channel.b, _channelB);
-    await _box.setMALevelV2(_multiAdjust);
-    await _box.switchToMode(_mode);
+    try {
+      await _box.connect();
+      // reset
+      await _box.setChannelLevelV2(Channel.a, _channelA);
+      await _box.setChannelLevelV2(Channel.b, _channelB);
+      await _box.setMALevelV2(_multiAdjust);
+      await _box.switchToMode(_mode);
+      connectionInfo.status = ConnectionStatus.connected;
+      // ignore: avoid_catches_without_on_clauses (error is shown)
+    } catch (e) {
+      connectionInfo.status = ConnectionStatus.error;
+      connectionInfo.errorMessage = e.toString();
+    }
   }
 
   Future<void> disconnect() async {
-    await _box.close();
+    connectionInfo.status = ConnectionStatus.disconnecting;
+    try {
+      await _box.close();
+      // ignore: avoid_catches_without_on_clauses (error is logged)
+    } catch (e) {
+      developer.log('Error disconnecting: $e');
+    }
   }
 
   Mode _mode = Mode.wave;

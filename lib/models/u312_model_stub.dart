@@ -1,6 +1,12 @@
+import 'package:r312/api/connection_info.dart';
 import 'package:r312/api/modes.dart';
 
 class U312ModelStub {
+  U312ModelStub() {
+    connectionInfo.status = ConnectionStatus.connected;
+  }
+  ConnectionInfo connectionInfo = ConnectionInfo();
+
   Mode mode = Mode.wave;
 
   int _channelA = 0;
