@@ -1,10 +1,7 @@
-import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
 import 'package:r312/connections/serial_providers/platform_serial_provider.dart';
 import 'package:r312/connections/serial_providers/rs232_provider.dart';
 import 'package:r312/models/u312_model_bridge.dart';
-import 'package:r312/screens/pages/wizard/connecting_wizard_page.dart';
 import 'package:r312/screens/pages/wizard/mqtt_broker_wizard_page.dart';
 import 'package:r312/screens/pages/wizard/serial_selector_wizard_page.dart';
 import 'package:r312/screens/pages/wizard/serial_unavailable_wizard_page.dart';
@@ -24,7 +21,6 @@ class _BridgeWizardState extends State<BridgeWizard> {
   bool _isSupported = true;
   late final RS232ProviderInterface? _serialProvider;
   late String? _mqttAddress;
-  final ValueNotifier<String?> _connectionErrorNotifier = ValueNotifier(null);
 
   final List<Widget> _pages = [];
 
@@ -58,34 +54,10 @@ class _BridgeWizardState extends State<BridgeWizard> {
             SerialSelectorWizardPage(
               devices: options.devices,
               onSelect: (String address) async {
-                setState(() {
-                  _connectionErrorNotifier.value = null; // Reset error state
-                  _currentPage += 1; // Navigate to the "connecting" page
-                });
-
-                try {
-                  final model = U312ModelBridge(address, _mqttAddress ?? '');
-                  await model.connect();
-                  // Handle successful connection
-                  if (mounted) {
-                    // Explicitly check if the widget is still mounted
-                    widget.onPanelPicked?.call(model);
-                    Navigator.pop(context);
-                  }
-
-                  // ignore: avoid_catches_without_on_clauses allow all failures
-                } catch (e) {
-                  // Handle connection failure
-                  developer.log('Failed to connect: $e');
-                  _connectionErrorNotifier.value =
-                      e.toString(); // Set error message
-                }
+                final model = U312ModelBridge(address, _mqttAddress ?? '');
+                widget.onPanelPicked?.call(model);
+                Navigator.pop(context);
               },
-            ),
-          )
-          ..add(
-            ConnectingWizardPage(
-              connectionErrorNotifier: _connectionErrorNotifier,
             ),
           );
       }

@@ -2,7 +2,6 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:r312/models/u312_model_remote.dart';
-import 'package:r312/screens/pages/wizard/connecting_wizard_page.dart';
 import 'package:r312/screens/pages/wizard/mqtt_broker_wizard_page.dart';
 
 class RemoteControlWizard extends StatefulWidget {
@@ -15,30 +14,14 @@ class RemoteControlWizard extends StatefulWidget {
 }
 
 class _RemoteControlWizardState extends State<RemoteControlWizard> {
-  int _currentPage = 0;
-  final ValueNotifier<String?> _connectionErrorNotifier = ValueNotifier(null);
+  final int _currentPage = 0;
 
   late final List<Widget> _pages;
 
   Future<void> _connect(BuildContext context, String address) async {
-    setState(() {
-      _currentPage = 1; // Navigate to the "connecting" page
-      _connectionErrorNotifier.value = null; // Reset error state
-    });
-
-    try {
-      final model = U312ModelRemote(address);
-      await model.connect();
-      if (mounted) {
-        widget.onPanelPicked?.call(model);
-        Navigator.pop(context);
-      }
-      // ignore: avoid_catches_without_on_clauses show all errors
-    } catch (e) {
-      // Handle connection failure
-      developer.log('Failed to connect: $e');
-      _connectionErrorNotifier.value = e.toString(); // Set error message
-    }
+    final model = U312ModelRemote(address);
+    widget.onPanelPicked?.call(model);
+    Navigator.pop(context);
   }
 
   @override
@@ -62,7 +45,6 @@ class _RemoteControlWizardState extends State<RemoteControlWizard> {
           await _connect(context, address);
         },
       ),
-      ConnectingWizardPage(connectionErrorNotifier: _connectionErrorNotifier),
     ];
   }
 

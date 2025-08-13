@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:r312/models/u312_model_bridge.dart';
+import 'package:r312/screens/widgets/connection_info_widget.dart';
 
 class BridgeControlPanel extends StatelessWidget {
-  const BridgeControlPanel({
-    required this.model,
-    required this.onRemove,
-    super.key,
-  });
+  BridgeControlPanel({required this.model, required this.onRemove, super.key}) {
+    model.connect();
+  }
   final U312ModelBridge model;
   final VoidCallback onRemove;
 
@@ -38,6 +37,14 @@ class BridgeControlPanel extends StatelessWidget {
               ),
             ),
           ],
+        ),
+        ConnectionInfoWidget(
+          label: 'Box',
+          connectionInfo: model.boxConnectionInfo,
+        ),
+        ConnectionInfoWidget(
+          label: 'Remote',
+          connectionInfo: model.mqttConnectionInfo,
         ),
         // ...existing code...
       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:r312/api/modes.dart';
 import 'package:r312/models/u312_model_stub.dart';
+import 'package:r312/screens/widgets/connection_info_widget.dart';
 import 'package:r312/screens/widgets/mode_picker_widget.dart';
 import 'package:r312/screens/widgets/pot_picker_widget.dart';
 
@@ -38,6 +39,10 @@ class StubControlPanel extends StatelessWidget {
               ),
             ),
           ],
+        ),
+        ConnectionInfoWidget(
+          label: 'Stub',
+          connectionInfo: model.connectionInfo,
         ),
         const SizedBox(height: 12),
         // Second row: Mode picker

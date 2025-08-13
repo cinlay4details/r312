@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:r312/api/modes.dart';
 import 'package:r312/models/u312_model_remote.dart';
+import 'package:r312/screens/widgets/connection_info_widget.dart';
 import 'package:r312/screens/widgets/mode_picker_widget.dart';
 import 'package:r312/screens/widgets/pot_picker_widget.dart';
 
 class RemoteControlPanel extends StatelessWidget {
-  const RemoteControlPanel({
-    required this.model,
-    required this.onRemove,
-    super.key,
-  });
+  RemoteControlPanel({required this.model, required this.onRemove, super.key}) {
+    model.connect();
+  }
   final U312ModelRemote model;
   final VoidCallback onRemove;
 
@@ -42,6 +41,7 @@ class RemoteControlPanel extends StatelessWidget {
             ),
           ],
         ),
+        ConnectionInfoWidget(label: '', connectionInfo: model.connectionInfo),
         const SizedBox(height: 12),
         // Second row: Mode picker
         ModePickerWidget(

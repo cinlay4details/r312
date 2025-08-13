@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:r312/api/modes.dart';
 import 'package:r312/models/u312_model_direct.dart';
+import 'package:r312/screens/widgets/connection_info_widget.dart';
 import 'package:r312/screens/widgets/mode_picker_widget.dart';
 import 'package:r312/screens/widgets/pot_picker_widget.dart';
 
 class DirectControlPanel extends StatelessWidget {
-  const DirectControlPanel({
-    required this.model,
-    required this.onRemove,
-    super.key,
-  });
+  DirectControlPanel({required this.model, required this.onRemove, super.key}) {
+    model.connect();
+  }
   final U312ModelDirect model;
   final VoidCallback onRemove;
 
@@ -42,6 +41,7 @@ class DirectControlPanel extends StatelessWidget {
             ),
           ],
         ),
+        ConnectionInfoWidget(label: '', connectionInfo: model.connectionInfo),
         const SizedBox(height: 12),
         // Second row: Mode picker
         ModePickerWidget(
